@@ -7,10 +7,19 @@ import {
   refreshToken,
 } from "../controllers/auth.controller.js"
 const router = express.Router()
+import authMiddleware from "../middlewares/authMiddleware.js"
 
 router.post("/register", trimRequest.all, register)
 router.post("/login", trimRequest.all, login)
 router.post("/logout", trimRequest.all, logout)
-router.get("/refreshToken", trimRequest.all, refreshToken)
+router.post("/refreshtoken", trimRequest.all, refreshToken)
+router.get(
+  "/testingAuthMiddleware",
+  trimRequest.all,
+  authMiddleware,
+  (req, res) => {
+    res.json({ message: "hello" })
+  }
+)
 
 export default router

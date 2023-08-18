@@ -5,11 +5,6 @@ import Register from "./pages/register"
 import { useDispatch, useSelector } from "react-redux"
 import { logout } from "./features/userSlice"
 function App() {
-  const dispatch = useDispatch()
-  const { user } = useSelector((store) => {
-    return store.user
-  })
-  console.log(user)
   return (
     <div className="dark">
       <Router>

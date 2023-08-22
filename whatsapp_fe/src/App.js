@@ -13,7 +13,7 @@ function App() {
   let { user } = useSelector((store) => {
     return store.user
   })
-  const { token } = user
+  const { token } = ""
   console.log("data", user)
 
   return (

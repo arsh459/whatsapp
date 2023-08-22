@@ -7,13 +7,12 @@ import {
 import Home from "./pages/home"
 import Login from "./pages/login"
 import Register from "./pages/register"
-import { useDispatch, useSelector } from "react-redux"
-import { logout } from "./features/userSlice"
+import { useSelector } from "react-redux"
 function App() {
   let { user } = useSelector((store) => {
     return store.user
   })
-  const { token } = ""
+  const token = user.token
   console.log("data", user)
 
   return (

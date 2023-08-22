@@ -42,3 +42,35 @@ export const populateConversation = async (id, field, Nfield) => {
   }
   return populatedConvo
 }
+
+export const getUserConversations = async (user_id) => {
+  let conversations
+  await ConversationModel.find({
+    users: { $elemMatch: { $eq: user_id } },
+  })
+    .populate("users", "-password")
+    .populate("admin", "-password")
+    .populate("latestMessage")
+    .sort({ updatedAt: -1 })
+    .then(async (results) => {
+      results = await UserModel.populate(results, {
+        path: "latestMessage.sender",
+        select: "name email picture status",
+      })
+      conversations = results
+    })
+    .catch((error) => {
+      throw createHttpError.BadRequest("Oops... Something went wrong")
+    })
+  return conversations
+}
+
+export const updateLatestMessage = async (convo_id, msg) => {
+  const updatedConvo = await ConversationModel.findByIdAndUpdate(convo_id, {
+    latestMessage: msg,
+  })
+  if (!updatedConvo)
+    throw createHttpError.BadRequest("Oops... Something went wrong")
+
+  return updatedConvo
+}

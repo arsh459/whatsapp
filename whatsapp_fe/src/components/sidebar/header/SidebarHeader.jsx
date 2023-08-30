@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux"
-import { CommunityIcon } from "../../../svg"
+import { CommunityIcon, StoryIcon, DotsIcon, ChatIcon } from "../../../svg"
 export default function SidebarHeader() {
   let { user } = useSelector((store) => {
     return store.user
@@ -17,10 +17,25 @@ export default function SidebarHeader() {
           />
         </button>
         {/* User icons */}
-        <ul className="flex items-center gap-x-2.5">
+        <ul className="flex items-center gap-x-2 first-letter:5">
           <li>
             <button className="btn">
               <CommunityIcon className="dark:fill-dark_svg_1" />
+            </button>
+          </li>
+          <li>
+            <button className="btn">
+              <StoryIcon className="dark:fill-dark_svg_1" />
+            </button>
+          </li>
+          <li>
+            <button className="btn">
+              <ChatIcon className="dark:fill-dark_svg_1" />
+            </button>
+          </li>
+          <li>
+            <button className="btn">
+              <DotsIcon className="dark:fill-dark_svg_1" />
             </button>
           </li>
         </ul>

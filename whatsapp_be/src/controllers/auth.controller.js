@@ -67,7 +67,7 @@ export const login = async (req, res, next) => {
     })
 
     res.json({
-      message: "register success.",
+      message: "Login success.",
       user: {
         _id: user._id,
         name: user.name,

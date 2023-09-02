@@ -37,7 +37,7 @@ export default function Picture({ setPicture, picture }) {
     }
   }
   const handleChangePic = () => {
-    setPicture(null)
+    setPicture("")
     imageRef.current.src = ""
   }
   return (

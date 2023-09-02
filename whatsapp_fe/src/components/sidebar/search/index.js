@@ -1,2 +1,4 @@
 import Search from "./Search"
-export { Search }
+import SearchResults from "./SearchResults"
+import Contact from "./Contact"
+export { Search, SearchResults, Contact }

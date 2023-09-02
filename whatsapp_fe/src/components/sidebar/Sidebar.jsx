@@ -1,21 +1,37 @@
 import { useState } from "react"
-import { SidebarHeader } from "./header"
+
 import { Notifications } from "./notifications/index.js"
-import { Search } from "./search"
+import { Search, SearchResults } from "./search"
 import { Conversations } from "./conversations"
+import SidebarHeader from "./header/SidebarHeader.jsx"
 
 export default function Sidebar() {
   const [searchResults, setSearchResults] = useState([])
   return (
-    <div className="w-[40%] h-full select-none">
+    <div className="flex0030 max-w-[30%] h-full select-none">
       {/* Sidebar header */}
       <SidebarHeader />
       {/* Notification */}
       <Notifications />
       {/* Search bar */}
-      <Search searchLength={searchResults.length} />
+      <Search
+        searchLength={searchResults.length}
+        setSearchResults={setSearchResults}
+      />
+
       {/* Conversations */}
-      <Conversations />
+      {searchResults.length > 0 ? (
+        <>
+          <SearchResults
+            searchResults={searchResults}
+            setSearchResults={setSearchResults}
+          />
+        </>
+      ) : (
+        <>
+          <Conversations />
+        </>
+      )}
     </div>
   )
 }

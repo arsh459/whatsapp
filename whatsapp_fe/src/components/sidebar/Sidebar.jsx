@@ -17,6 +17,7 @@ export default function Sidebar() {
       <Search
         searchLength={searchResults.length}
         setSearchResults={setSearchResults}
+        searchResults={searchResults}
       />
 
       {/* Conversations */}

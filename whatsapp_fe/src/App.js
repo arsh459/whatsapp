@@ -15,6 +15,10 @@ function App() {
   let { user } = useSelector((store) => {
     return store.user
   })
+  let { files } = useSelector((store) => {
+    return store.chat
+  })
+  console.log("files", files)
   const token = user.token
   console.log("data", user)
 

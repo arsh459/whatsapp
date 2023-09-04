@@ -8,7 +8,7 @@ import {
 } from "../../../utils/chat"
 import { capitalize } from "../../../utils/string"
 import SocketContext from "../../../context/SocketContext"
-function Conversation({ convo, socket }) {
+function Conversation({ convo, socket, online, typing }) {
   const dispatch = useDispatch()
   const { user } = useSelector((state) => {
     return state.user
@@ -42,7 +42,11 @@ function Conversation({ convo, socket }) {
         {/* left */}
         <div className="flex items-center gap-x-3">
           {/* user picture */}
-          <div className="relative min-w-[50px] max-w-[50px] h-[50px] rounded-full overflow-hidden">
+          <div
+            className={`relative min-w-[50px] max-w-[50px] h-[50px] rounded-full overflow-hidden ${
+              online ? "online" : ""
+            }`}
+          >
             <img
               src={getConversationPicture(user, convo.users)}
               alt="picture"
@@ -55,11 +59,15 @@ function Conversation({ convo, socket }) {
             </h1>
             <div className="flex items-center gap-x-1 dark:text-dark_text_2">
               <div className="flex-1 items-center gap-x-1 dark:text-dark_text_2">
-                <p>
-                  {convo.latestMessage?.message.length > 25
-                    ? `${convo.latestMessage?.message.substring(0, 25)}...`
-                    : convo.latestMessage?.message}
-                </p>
+                {typing === convo._id ? (
+                  <p className="text-green_1">Typing...</p>
+                ) : (
+                  <p>
+                    {convo.latestMessage?.message.length > 25
+                      ? `${convo.latestMessage?.message.substring(0, 25)}...`
+                      : convo.latestMessage?.message}
+                  </p>
+                )}
               </div>
             </div>
           </div>

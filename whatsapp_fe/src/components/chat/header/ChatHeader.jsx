@@ -7,7 +7,7 @@ import {
   getConversationPicture,
 } from "../../../utils/chat"
 
-export default function ChatHeader() {
+export default function ChatHeader({ online }) {
   const { user } = useSelector((state) => state.user)
   const { activeConversation } = useSelector((state) => state.chat)
   const { name, picture } = activeConversation
@@ -31,7 +31,9 @@ export default function ChatHeader() {
                 )[0]
               )}
             </h1>
-            <span className="text-xs dark:text-dark_svg_2">online</span>
+            <span className="text-xs dark:text-dark_svg_2">
+              {online ? "online" : ""}
+            </span>
           </div>
         </div>
         {/* right */}

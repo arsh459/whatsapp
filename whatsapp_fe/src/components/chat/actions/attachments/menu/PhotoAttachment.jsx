@@ -32,7 +32,9 @@ export default function PhotoAttachment() {
       } else {
         const reader = new FileReader()
         reader.readAsDataURL(file)
+        console.log(file)
         reader.onload = (e) => {
+          console.log(e)
           dispatch(
             addFiles({
               file: file,

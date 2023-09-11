@@ -22,7 +22,7 @@ export default function Menu() {
           <ContactIcon />
         </button>
       </li>
-      <DocumentAttachment />
+      {/* <DocumentAttachment /> */}
 
       <li>
         <button type="button" className=" bg-[#d3396d] rounded-full">

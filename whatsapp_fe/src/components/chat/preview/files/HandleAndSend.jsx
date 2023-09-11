@@ -1,9 +1,35 @@
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import Add from "./Add"
 import { SendIcon } from "../../../../svg"
+import { uploadFiles } from "../../../../utils/upload"
+import { sendMessage } from "../../../../features/chatSlice"
+import SocketContext from "../../../../context/SocketContext"
+import { useState } from "react"
+function HandleAndSend({ activeIndex, setActiveIndex, message, socket }) {
+  const [loading, setLoading] = useState(false)
+  const { files, activeConversation } = useSelector((state) => state.chat)
+  const { user } = useSelector((state) => state.user)
+  const { token } = user
+  const dispatch = useDispatch()
+  async function sendMessageHandler(e) {
+    e.preventDefault()
+    // setLoading(true)
 
-export default function HandleAndSend({ activeIndex, setActiveIndex }) {
-  const { files } = useSelector((state) => state.chat)
+    //upload files first
+    // const uploaded_files = await uploadFiles(files)
+    // console.log(uploaded_files)
+
+    // //send the message
+    // const values = {
+    //   token,
+    //   message,
+    //   convo_id: activeConversation._id,
+    //   files: uploadFiles.length > 0 ? uploadFiles : [],
+    // }
+    // let newMsg = await dispatch(sendMessage(values))
+    // socket.emit("send message", newMsg.payload)
+    // setLoading(false)
+  }
   return (
     <div className="flex w-[97%] items-center justify-between mt-2 border-t dark:border-dark_border_2">
       {/* empty */}
@@ -40,9 +66,22 @@ export default function HandleAndSend({ activeIndex, setActiveIndex }) {
         <Add setActiveIndex={setActiveIndex} />
       </div>
       {/* send button */}
-      <div className="bg-green_1 w-14 h-14 mt-2 rounded-full flex items-center justify-center cursor-pointer">
+      <div
+        className="bg-green_1 w-14 h-14 mt-2 rounded-full flex items-center justify-center cursor-pointer"
+        onClick={(e) => {
+          sendMessageHandler(e)
+        }}
+      >
         <SendIcon className="fill-white" />
       </div>
     </div>
   )
 }
+const HandleAndSendWithSocket = (props) => {
+  return (
+    <SocketContext.Consumer>
+      {(socket) => <HandleAndSendWithSocket {...props} socket={socket} />}
+    </SocketContext.Consumer>
+  )
+}
+export default HandleAndSendWithSocket

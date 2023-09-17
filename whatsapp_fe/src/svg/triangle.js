@@ -13,7 +13,7 @@ function TraingleIcon({ className }) {
         transform="matrix(.1 0 0 -.1 0 1130)"
       ></path>
     </svg>
-  )
+  );
 }
 
-export default TraingleIcon
+export default TraingleIcon;

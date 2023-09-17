@@ -10,6 +10,7 @@ export default function Add() {
   function filesHandler(e) {
     let files = Array.from(e.target.files)
     files.forEach((file) => {
+      console.log(file)
       if (
         file.type !== "application/pdf" &&
         file.type !== "text/plain" &&
@@ -39,6 +40,7 @@ export default function Add() {
         })
         return
       } else if (file.size > 1024 * 1024 * 5) {
+        alert(`${file.name} size is greater than 5mb`)
         files = files.filter((item) => {
           return item.name !== file.name
         })
@@ -51,7 +53,10 @@ export default function Add() {
             addFiles({
               file: file,
               fileData:
-                getFileType(file.type) === "IMAGE" ? ev.target.result : "",
+                getFileType(file.type) === "IMAGE" ||
+                getFileType(file.type) === "VIDEO"
+                  ? ev.target.result
+                  : "",
               type: getFileType(file.type),
             })
           )

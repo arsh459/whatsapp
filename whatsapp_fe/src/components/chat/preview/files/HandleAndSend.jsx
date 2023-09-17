@@ -1,9 +1,50 @@
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import Add from "./Add"
-import { SendIcon } from "../../../../svg"
+import { CloseIcon, SendIcon } from "../../../../svg"
+import { uploadFiles } from "../../../../utils/upload"
+import { useState } from "react"
+import {
+  removeFileFromFiles,
+  sendMessage,
+} from "../../../../features/chatSlice"
+import SocketContext from "../../../../context/SocketContext"
+import { ClipLoader } from "react-spinners"
+import VideoThumbnail from "react-video-thumbnail"
 
-export default function HandleAndSend({ activeIndex, setActiveIndex }) {
-  const { files } = useSelector((state) => state.chat)
+function HandleAndSend({ activeIndex, setActiveIndex, message, socket }) {
+  const dispatch = useDispatch()
+  const { files, activeConversation } = useSelector((state) => state.chat)
+  const { user } = useSelector((state) => state.user)
+  const { token } = user
+  const [loading, setLoading] = useState(false)
+
+  //send Message handler
+  const sendMessageHandler = async (e) => {
+    e.preventDefault()
+    setLoading(true)
+
+    // upload files
+    const uploaded_files = await uploadFiles(files)
+    console.log(uploaded_files)
+
+    // //send the message
+    const values = {
+      token,
+      message,
+      convo_id: activeConversation._id,
+      files: uploaded_files.length > 0 ? uploaded_files : [],
+    }
+    let newMsg = await dispatch(sendMessage(values))
+    socket.emit("send message", newMsg.payload)
+    setLoading(false)
+  }
+
+  //handle Remove files
+  async function handleRemoveFile(index) {
+    let updatedFiles = files.filter((e, i) => i != index)
+    await dispatch(removeFileFromFiles(updatedFiles))
+  }
+
   return (
     <div className="flex w-[97%] items-center justify-between mt-2 border-t dark:border-dark_border_2">
       {/* empty */}
@@ -14,7 +55,7 @@ export default function HandleAndSend({ activeIndex, setActiveIndex }) {
           return (
             <div
               key={i}
-              className={`w-14 h-14 border dark:border-white rounded-md overflow-hidden mt-2 cursor-pointer ${
+              className={`fileThumbnail relative w-14 h-14 border dark:border-white rounded-md overflow-hidden mt-2 cursor-pointer flex align-middle ${
                 activeIndex === i ? "border-[3px] !border-green_1" : ""
               }`}
               onClick={() => {
@@ -27,22 +68,56 @@ export default function HandleAndSend({ activeIndex, setActiveIndex }) {
                   alt=""
                   className="w-full h-full object-cover"
                 />
+              ) : file.type === "VIDEO" ? (
+                <>
+                  {/* <video src={file.fileData} /> */}
+                  <VideoThumbnail
+                    videoUrl={file.fileData}
+                    width={"14px"}
+                    height={"14px"}
+                  />
+                </>
               ) : (
                 <img
                   src={`../../../../images/file/${file.type}.png`}
                   className="w-8 h-10 mt-1.5 ml-2.5"
                 />
               )}
+              <div
+                className="removeFileIcon hidden"
+                data-key={i}
+                onClick={(e) => {
+                  console.log("index", e.currentTarget.getAttribute("data-key"))
+                  handleRemoveFile(e.currentTarget.getAttribute("data-key"))
+                }}
+              >
+                <CloseIcon className="dark:fill-red-500 absolute right-0 top-0 w-4 h-4" />
+              </div>
             </div>
           )
         })}
         {/* add another file */}
         <Add setActiveIndex={setActiveIndex} />
       </div>
-      {/* send button */}
-      <div className="bg-green_1 w-14 h-14 mt-2 rounded-full flex items-center justify-center cursor-pointer">
-        <SendIcon className="fill-white" />
+
+      <div
+        className="bg-green_1 w-14 h-14 mt-2 rounded-full flex items-center justify-center cursor-pointer"
+        onClick={sendMessageHandler}
+      >
+        {loading ? (
+          <ClipLoader color="#E9EDEF" size={25} />
+        ) : (
+          <SendIcon className="fill-white" />
+        )}
       </div>
     </div>
   )
 }
+const HandleAndSendWithSocket = (props) => {
+  return (
+    <SocketContext.Consumer>
+      {(socket) => <HandleAndSend {...props} socket={socket} />}
+    </SocketContext.Consumer>
+  )
+}
+export default HandleAndSendWithSocket

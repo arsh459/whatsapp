@@ -19,47 +19,45 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 //Server
-mongoose
-  .connect(DATABASE_URL, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
+let connection = await mongoose.connect(DATABASE_URL, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+if (connection) {
+  let server = app.listen(PORT, () => {
+    logger.info(`server is listening at ${PORT}`)
+    console.log("Process Id", process.pid)
   })
-  .then(() => {
-    logger.info("Connected to mongoDB")
+
+  // Server io
+  const io = new Server(server, {
+    pingTimeout: 60000,
+    cors: {
+      origin: process.env.CLIENT_ENDPOINT,
+    },
   })
-let server = app.listen(PORT, () => {
-  logger.info(`server is listening at ${PORT}`)
-  console.log("Process Id", process.pid)
-})
 
-// Server io
-const io = new Server(server, {
-  pingTimeout: 60000,
-  cors: {
-    origin: process.env.CLIENT_ENDPOINT,
-  },
-})
+  io.on("connection", (socket) => {
+    logger.info("socket io connected successfully")
+    SocketServer(socket, io)
+  })
 
-io.on("connection", (socket) => {
-  logger.info("socket io connected successfully")
-  SocketServer(socket, io)
-})
-
-//handle server error
-const exitHandler = () => {
-  if (server) {
-    logger.info("Server Closed")
-    process.exit(1)
-  } else {
-    process.exit(1)
+  //handle server error
+  const exitHandler = () => {
+    if (server) {
+      logger.info("Server Closed")
+      process.exit(1)
+    } else {
+      process.exit(1)
+    }
   }
-}
-const unexpectedErrorHandler = (error) => {
-  logger.error(error)
-  exitHandler()
-}
-process.on("uncaughtException", unexpectedErrorHandler)
-process.on("unhandledRejection", unexpectedErrorHandler)
+  const unexpectedErrorHandler = (error) => {
+    logger.error(error)
+    exitHandler()
+  }
+  process.on("uncaughtException", unexpectedErrorHandler)
+  process.on("unhandledRejection", unexpectedErrorHandler)
 
-// SIGTERM
-process.on("SIGTERM", exitHandler)
+  // SIGTERM
+  process.on("SIGTERM", exitHandler)
+}

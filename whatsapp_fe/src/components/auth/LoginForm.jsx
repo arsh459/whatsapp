@@ -81,7 +81,7 @@ export default function RegisterForm() {
           <p className="flex flex-col items-center justify-center m-1 text-center text-md dark:text-dark_text_1">
             <span>you do not have an account</span>
             <Link
-              href="/register"
+              to="/register"
               className="dark:text-blue-500 hover:underline cursor-pointer transition ease-in duration-100"
             >
               Sign Up

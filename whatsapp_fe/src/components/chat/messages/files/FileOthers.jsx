@@ -1,6 +1,11 @@
+import { useEffect } from "react"
 import { DownloadIcon } from "../../../../svg"
+import { useState } from "react"
+// import { v2 as cloudinary } from "cloudinary"
 
 export default function FileOthers({ file, type }) {
+  // const [downloadUrl, setDownloadUrl] = useState(null)
+  useEffect(() => {})
   return (
     <div className="bg-green_4 p-2 rounded-lg">
       <div className="flex justify-between gap-x-8">

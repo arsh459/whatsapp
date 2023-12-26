@@ -6,7 +6,6 @@ It is a web application in which realtime conversation can happen between multip
 
 - [Project Overview](#project-overview)
 - [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
   - [Installation](#installation)
 
 ## Project Overview
